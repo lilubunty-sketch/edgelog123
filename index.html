@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Edgelog — Trading Journal</title>
+<style>
+:root{--bg:#0a0c10;--pan:#11141a;--pan2:#171b23;--line:#222835;--tx:#e8ebf1;--mu:#8a93a6;--ac:#f5b14a;--acx:#1a1306;--up:#2ecc8f;--dn:#ff5d73;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f5f8;--pan:#fff;--pan2:#eef0f5;--line:#dde1ea;--tx:#161a22;--mu:#667085;--ac:#b86e00;--acx:#fff;--up:#0f9d6a;--dn:#d6334c;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f4f5f8;--pan:#fff;--pan2:#eef0f5;--line:#dde1ea;--tx:#161a22;--mu:#667085;--ac:#b86e00;--acx:#fff;--up:#0f9d6a;--dn:#d6334c;color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,-apple-system,Segoe UI,sans-serif;display:flex;min-height:100vh}
+nav{width:216px;flex:none;background:var(--pan);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
+.logo{font:700 19px/1 Georgia,serif;letter-spacing:.3px;padding:4px 10px 18px}.logo b{color:var(--ac)}
+nav a{color:var(--mu);text-decoration:none;padding:9px 12px;border-radius:9px;font-weight:500;white-space:nowrap}
+nav a:hover{background:var(--pan2);color:var(--tx)}nav a.on{background:var(--pan2);color:var(--ac)}
+.sp{flex:1}
+main{flex:1;min-width:0;padding:26px;max-width:1200px}
+h1{font:600 22px/1.2 Georgia,serif;margin:0 0 4px}.sub{color:var(--mu);margin:0 0 20px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.btn{background:var(--ac);color:var(--acx);border:0;border-radius:9px;padding:9px 15px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.btn.g{background:var(--pan2);color:var(--tx);border:1px solid var(--line)}.btn.d{background:transparent;color:var(--dn);border:1px solid var(--dn)}
+.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.grid{display:grid;gap:14px}.k{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:14px}.two{grid-template-columns:2fr 1fr}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.card{background:var(--pan);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{margin:0 0 12px;font-size:12px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.8px}
+.big{font:600 26px/1.1 Georgia,serif}.lbl{color:var(--mu);font-size:12px;margin-top:4px}
+.up{color:var(--up)}.dn{color:var(--dn)}
+.gauge{width:120px;height:120px;border-radius:50%;display:grid;place-items:center;margin:4px auto 8px}
+.gauge i{width:92px;height:92px;border-radius:50%;background:var(--pan);display:grid;place-items:center;font:600 30px Georgia,serif;font-style:normal}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px}
+th{color:var(--mu);font-weight:500;text-align:left;font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line)}tr.r{cursor:pointer}tr.r:hover td{background:var(--pan2)}
+.tag{background:var(--pan2);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:12px;color:var(--mu)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.cal .w{color:var(--mu);font-size:12px;text-align:center}
+.day{min-height:72px;border-radius:9px;background:var(--pan2);padding:6px 8px;font-size:12px;color:var(--mu);overflow:hidden}
+.day b{display:block;font-size:13px;margin-top:6px;font-weight:600}.day.w1{background:color-mix(in srgb,var(--up) 22%,var(--pan2))}.day.l1{background:color-mix(in srgb,var(--dn) 22%,var(--pan2))}
+.bar{display:grid;grid-template-columns:120px 1fr 90px;gap:10px;align-items:center;margin:9px 0;font-size:13px}.bar div.t{height:9px;background:var(--pan2);border-radius:5px;position:relative}.bar i{position:absolute;top:0;bottom:0;border-radius:5px}
+input,select,textarea{background:var(--pan2);border:1px solid var(--line);color:var(--tx);border-radius:8px;padding:8px 10px;font:inherit;width:100%}
+label{display:block;color:var(--mu);font-size:12px;margin:0 0 4px}.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:12px}
+dialog{background:var(--pan);color:var(--tx);border:1px solid var(--line);border-radius:16px;padding:22px;width:min(640px,94vw)}dialog::backdrop{background:#000a}
+.chk{display:flex;gap:8px;align-items:center;margin:6px 0;color:var(--tx)}.chk input{width:auto}
+.empty{color:var(--mu);text-align:center;padding:30px}
+@media(max-width:760px){body{flex-direction:column}nav{width:auto;flex-direction:row;overflow-x:auto;padding:10px;border-right:0;border-bottom:1px solid var(--line)}.logo{padding:8px 10px}.sp{display:none}main{padding:16px}}
+</style></head><body>
+<nav><div class="logo">Edge<b>log</b></div>
+<a href="#dashboard" data-v="dashboard">Dashboard</a><a href="#trades" data-v="trades">Trade log</a><a href="#calendar" data-v="calendar">Calendar</a><a href="#playbooks" data-v="playbooks">Playbooks</a><a href="#reports" data-v="reports">Reports</a>
+<div class="sp"></div><a href="#" onclick="resetData();return false">Reset demo data</a></nav>
+<main id="main"></main><dialog id="dlg"></dialog>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const usd=n=>(n<0?'-':'')+'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const cls=n=>n>0?'up':n<0?'dn':'';const pnl=t=>+((t.exit-t.entry)*t.qty*(t.side==='Long'?1:-1)).toFixed(2);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+let S,cur,cal=new Date();
+function seed(){let a=7;const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+ const pbs=[{id:'p1',name:'Liquidity sweep reversal',rules:['Sweep of a prior high or low','Displacement candle after the sweep','Entry on retest, stop beyond the sweep','Minimum 2R target']},{id:'p2',name:'Order block retest',rules:['Higher-timeframe bias is clear','Price returns to the block','Risk is 1% or less']},{id:'p3',name:'Opening range breakout',rules:['Wait for the first 15 minutes','Volume above average','No entry after 11:00']}];
+ const base={AAPL:190,TSLA:240,NVDA:120,SPY:520,QQQ:450},sy=Object.keys(base),trades=[],now=new Date();
+ for(let i=90;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);if([0,6].includes(d.getDay()))continue;const n=Math.floor(R()*3);
+  for(let j=0;j<n;j++){const s=sy[Math.floor(R()*5)],side=R()<.6?'Long':'Short',win=R()<.55,m=(win?.35+R()*1.1:.25+R()*.55)/100,e=+(base[s]*(1+(R()-.5)*.04)).toFixed(2),sg=(side==='Long'?1:-1)*(win?1:-1),pb=pbs[Math.floor(R()*3)];
+   const ok=pb.rules.map((_,k)=>k).filter(()=>R()<.8);
+   trades.push({id:'t'+i+'_'+j,date:iso(d),sym:s,side,qty:10+Math.floor(R()*9)*10,entry:e,exit:+(e*(1+sg*m)).toFixed(2),pb:pb.id,notes:win?'Followed the plan and let it run.':'Entered a touch early, stop was fair.',rating:1+Math.floor(R()*5),ok})}}
+ return{trades,pbs}}
+function load(){try{const v=localStorage.getItem('edgelog1');if(v)return JSON.parse(v)}catch(e){}return seed()}
+function save(){try{localStorage.setItem('edgelog1',JSON.stringify(S))}catch(e){}}
+function resetData(){S=seed();save();go()}
+function stats(L){const p=L.map(pnl),w=p.filter(x=>x>0),l=p.filter(x=>x<0),net=p.reduce((a,b)=>a+b,0),gw=w.reduce((a,b)=>a+b,0),gl=-l.reduce((a,b)=>a+b,0);
+ let eq=0,pk=0,dd=0;p.forEach(x=>{eq+=x;pk=Math.max(pk,eq);dd=Math.max(dd,pk-eq)});
+ const wr=p.length?w.length/p.length:0,aw=w.length?gw/w.length:0,al=l.length?gl/l.length:0,pf=gl?gw/gl:gw?9:0;
+ let ad=0,an=0;L.forEach(t=>{const r=(S.pbs.find(x=>x.id===t.pb)||{rules:[]}).rules.length;if(r){ad+=t.ok.length/r;an++}});ad=an?ad/an:0;
+ const score=Math.round(100*(.3*Math.min(wr/.6,1)+.3*Math.min(pf/2,1)+.2*Math.min((al?aw/al:0)/2,1)+.2*ad));
+ return{n:p.length,net,wr,aw,al,pf,exp:p.length?net/p.length:0,dd,ad,score,best:Math.max(0,...p),worst:Math.min(0,...p)}}
+const sorted=()=>[...S.trades].sort((a,b)=>a.date<b.date?-1:1);
+function kpi(l,v,c=''){return`<div class="card"><div class="big ${c}">${v}</div><div class="lbl">${l}</div></div>`}
+function curve(L){let e=0;const pts=L.map(t=>e+=pnl(t));if(pts.length<2)return'<div class="empty">Log a few trades to see your equity curve.</div>';
+ const W=700,H=220,mn=Math.min(0,...pts),mx=Math.max(0,...pts),y=v=>H-8-(v-mn)/((mx-mn)||1)*(H-16),x=i=>i/(pts.length-1)*W,d=pts.map((v,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)).join('');
+ return`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Equity curve"><path d="${d}L${W} ${y(mn)}L0 ${y(mn)}Z" fill="var(--ac)" opacity=".12"/><line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line)" stroke-dasharray="4"/><path d="${d}" fill="none" stroke="var(--ac)" stroke-width="2.4"/></svg>`}
+function rows(L,all){return L.length?`<div class="tw"><table><tr><th>Date</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Entry</th><th>Exit</th><th>Playbook</th><th style="text-align:right">P&amp;L</th></tr>${L.map(t=>{const p=pnl(t),b=S.pbs.find(x=>x.id===t.pb);return`<tr class="r" tabindex="0" onclick="openTrade('${t.id}')" onkeydown="if(event.key==='Enter')openTrade('${t.id}')"><td>${t.date}</td><td><b>${esc(t.sym)}</b></td><td>${t.side}</td><td>${t.qty}</td><td>${t.entry}</td><td>${t.exit}</td><td>${b?`<span class="tag">${esc(b.name)}</span>`:''}</td><td class="${cls(p)}" style="text-align:right">${usd(p)}</td></tr>`}).join('')}</table></div>`:'<div class="empty">No trades yet. Add your first one.</div>'}
+function dashboard(){const L=sorted(),s=stats(L);
+ return`<div class="hd"><div><h1>Dashboard</h1><p class="sub">Your edge, in numbers.</p></div><button class="btn" onclick="openTrade()">+ Add trade</button></div>
+<div class="grid k">${kpi('Net P&amp;L',usd(s.net),cls(s.net))}${kpi('Win rate',(s.wr*100).toFixed(1)+'%')}${kpi('Profit factor',s.pf.toFixed(2))}${kpi('Avg win / avg loss',usd(s.aw)+' / '+usd(-s.al))}${kpi('Expectancy per trade',usd(s.exp),cls(s.exp))}${kpi('Max drawdown',usd(-s.dd),s.dd?'dn':'')}</div>
+<div class="grid two"><div class="card"><h3>Equity curve</h3>${curve(L)}</div>
+<div class="card"><h3>Edge score</h3><div class="gauge" style="background:conic-gradient(var(--ac) ${s.score*3.6}deg,var(--pan2) 0)"><i>${s.score}</i></div><div class="lbl" style="text-align:center">Blends win rate, profit factor, payoff ratio and playbook discipline (${(s.ad*100).toFixed(0)}% rules followed).</div></div></div>
+<div class="card" style="margin-top:14px"><h3>Recent trades</h3>${rows(L.slice(-6).reverse())}</div>`}
+function trades(){const L=sorted().reverse();return`<div class="hd"><div><h1>Trade log</h1><p class="sub">${L.length} trades. Click any row to review it.</p></div><button class="btn" onclick="openTrade()">+ Add trade</button></div><div class="card">${rows(L)}</div>`}
+function calendar(){const y=cal.getFullYear(),m=cal.getMonth(),first=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),by={};
+ S.trades.forEach(t=>{(by[t.date]=by[t.date]||[]).push(t)});let c='',tot=0;
+ for(let i=0;i<first;i++)c+='<div></div>';
+ for(let d=1;d<=dim;d++){const k=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'),T=by[k]||[],p=T.reduce((a,t)=>a+pnl(t),0);tot+=p;c+=`<div class="day ${T.length?(p>=0?'w1':'l1'):''}">${d}${T.length?`<b class="${cls(p)}">${usd(p)}</b>${T.length} trade${T.length>1?'s':''}`:''}</div>`}
+ return`<div class="hd"><div><h1>Calendar</h1><p class="sub">${cal.toLocaleString('en-US',{month:'long',year:'numeric'})} · <span class="${cls(tot)}">${usd(tot)}</span></p></div><div><button class="btn g" onclick="mv(-1)" aria-label="Previous month">‹</button> <button class="btn g" onclick="mv(1)" aria-label="Next month">›</button></div></div><div class="card"><div class="cal">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="w">${x}</div>`).join('')}${c}</div></div>`}
+function mv(n){cal=new Date(cal.getFullYear(),cal.getMonth()+n,1);go()}
+function playbooks(){return`<div class="hd"><div><h1>Playbooks</h1><p class="sub">Write the rules once. Check yourself against them on every trade.</p></div><button class="btn" onclick="S.pbs.push({id:'p'+Date.now(),name:'New playbook',rules:['First rule']});save();go()">+ New playbook</button></div><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">${S.pbs.map((p,i)=>{const s=stats(S.trades.filter(t=>t.pb===p.id));return`<div class="card"><label for="pn${i}">Name</label><input id="pn${i}" value="${esc(p.name)}" onchange="S.pbs[${i}].name=this.value;save()"><p class="lbl">${s.n} trades · ${(s.wr*100).toFixed(0)}% win · <span class="${cls(s.net)}">${usd(s.net)}</span></p><label for="pr${i}">Rules (one per line)</label><textarea id="pr${i}" rows="5" onchange="S.pbs[${i}].rules=this.value.split('\\n').map(x=>x.trim()).filter(Boolean);save()">${esc(p.rules.join('\n'))}</textarea></div>`}).join('')}</div>`}
+function group(fn){const g={};S.trades.forEach(t=>{const k=fn(t);(g[k]=g[k]||[]).push(t)});return Object.entries(g).map(([k,L])=>({k,net:L.reduce((a,t)=>a+pnl(t),0),n:L.length}))}
+function bars(title,G){const mx=Math.max(1,...G.map(x=>Math.abs(x.net)));return`<div class="card"><h3>${title}</h3>${G.map(x=>`<div class="bar"><span>${esc(x.k)} <small class="lbl">(${x.n})</small></span><div class="t"><i style="background:var(--${x.net>=0?'up':'dn'});${x.net>=0?'left:50%':'right:50%'};width:${Math.abs(x.net)/mx*50}%"></i></div><span class="${cls(x.net)}" style="text-align:right">${usd(x.net)}</span></div>`).join('')||'<div class="empty">No data</div>'}</div>`}
+function reports(){const D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+ return`<h1>Reports</h1><p class="sub">Where the money is made, and where it leaks.</p><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">${bars('By playbook',group(t=>(S.pbs.find(p=>p.id===t.pb)||{name:'No playbook'}).name))}${bars('By symbol',group(t=>t.sym))}${bars('By day of week',group(t=>D[new Date(t.date+'T12:00:00').getDay()]).sort((a,b)=>D.indexOf(a.k)-D.indexOf(b.k)))}${bars('By side',group(t=>t.side))}${bars('By rating (self-grade)',group(t=>t.rating+' star').sort((a,b)=>a.k<b.k?-1:1))}</div>`}
+function openTrade(id){const t=id?S.trades.find(x=>x.id===id):{date:iso(new Date()),sym:'',side:'Long',qty:10,entry:'',exit:'',pb:S.pbs[0]?.id||'',notes:'',rating:3,ok:[]};cur=JSON.parse(JSON.stringify(t));cur.nw=!id;drawDlg();$('#dlg').showModal()}
+function drawDlg(){const pb=S.pbs.find(p=>p.id===cur.pb),v=(k,x)=>`oninput="cur.${k}=${x}"`;
+ $('#dlg').innerHTML=`<h1 style="font-size:19px;margin-bottom:14px">${cur.nw?'Add trade':'Review trade'}</h1>
+<div class="f"><div><label for="a1">Date</label><input id="a1" type="date" value="${cur.date}" ${v('date','this.value')}></div><div><label for="a2">Symbol</label><input id="a2" value="${esc(cur.sym)}" ${v('sym','this.value.toUpperCase()')}></div><div><label for="a3">Side</label><select id="a3" onchange="cur.side=this.value"><option ${cur.side==='Long'?'selected':''}>Long</option><option ${cur.side==='Short'?'selected':''}>Short</option></select></div></div>
+<div class="f"><div><label for="a4">Quantity</label><input id="a4" type="number" min="0" value="${cur.qty}" ${v('qty','+this.value')}></div><div><label for="a5">Entry price</label><input id="a5" type="number" step="any" value="${cur.entry}" ${v('entry','+this.value')}></div><div><label for="a6">Exit price</label><input id="a6" type="number" step="any" value="${cur.exit}" ${v('exit','+this.value')}></div></div>
+<div class="f"><div><label for="a7">Playbook</label><select id="a7" onchange="cur.pb=this.value;cur.ok=[];drawDlg()">${S.pbs.map(p=>`<option value="${p.id}" ${p.id===cur.pb?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div><div><label for="a8">Self-grade</label><select id="a8" onchange="cur.rating=+this.value">${[1,2,3,4,5].map(n=>`<option ${n===cur.rating?'selected':''}>${n}</option>`).join('')}</select></div></div>
+${pb?`<label>Did you follow the rules?</label>${pb.rules.map((r,i)=>`<label class="chk"><input type="checkbox" ${cur.ok.includes(i)?'checked':''} onchange="tog(${i})">${esc(r)}</label>`).join('')}`:''}
+<label for="a9" style="margin-top:12px">Notes</label><textarea id="a9" rows="3" ${v('notes','this.value')}>${esc(cur.notes)}</textarea>
+<p id="er" class="dn"></p><div style="display:flex;gap:8px;justify-content:space-between;margin-top:8px"><div>${cur.nw?'':'<button class="btn d" onclick="delT()">Delete</button>'}</div><div style="display:flex;gap:8px"><button class="btn g" onclick="$(\'#dlg\').close()">Cancel</button><button class="btn" onclick="saveT()">Save</button></div></div>`}
+function tog(i){const k=cur.ok.indexOf(i);k<0?cur.ok.push(i):cur.ok.splice(k,1)}
+function saveT(){if(!cur.sym||!(cur.entry>0)||!(cur.exit>0)||!(cur.qty>0)){$('#er').textContent='Add a symbol, quantity, entry and exit price.';return}
+ if(cur.nw){cur.id='t'+Date.now();delete cur.nw;S.trades.push(cur)}else{delete cur.nw;S.trades=S.trades.map(t=>t.id===cur.id?cur:t)}save();$('#dlg').close();go()}
+function delT(){S.trades=S.trades.filter(t=>t.id!==cur.id);save();$('#dlg').close();go()}
+const V={dashboard,trades,calendar,playbooks,reports};
+function go(){const h=location.hash.slice(1),v=V[h]?h:'dashboard';document.querySelectorAll('nav a[data-v]').forEach(a=>a.classList.toggle('on',a.dataset.v===v));$('#main').innerHTML=V[v]()}
+S=load();addEventListener('hashchange',go);go();
+</script></body></html>
